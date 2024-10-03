@@ -1,0 +1,103 @@
+//Question-1
+// lowerCaseWords.js
+function lowerCaseWords(mixedArray) {
+    return new Promise((resolve, reject) => {
+        if (!Array.isArray(mixedArray)) {
+            reject(new Error("Input must be an array"));
+        } else {
+            const filtered = mixedArray.filter(item => typeof item === 'string')
+                                       .map(item => item.toLowerCase());
+            resolve(filtered);
+        }
+    });
+}
+
+// Test the function
+const mixedArray = ['PIZZA', 10, true, 25, false, 'wings'];
+
+lowerCaseWords(mixedArray)
+    .then(result => console.log(result))  // Output: ['pizza', 'wings']
+    .catch(error => console.error(error));
+
+    
+//Question-2
+
+// resolvedPromise.js
+const resolvedPromise = () => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve({ message: 'delayed success!' });
+        }, 500);
+    });
+};
+
+const rejectedPromise = () => {
+    return new Promise((_, reject) => {
+        setTimeout(() => {
+            reject({ error: 'error: delayed exception!' });
+        }, 500);
+    });
+};
+
+// Call the promises and handle the result
+resolvedPromise()
+    .then(result => {
+        console.log(result); // { message: 'delayed success!' }
+    })
+    .catch(error => {
+        console.error(error);
+    });
+
+rejectedPromise()
+    .then(result => {
+        console.log(result);
+    })
+    .catch(error => {
+        console.error(error); // { error: 'error: delayed exception!' }
+    });
+
+
+
+//Question-3
+//to delete logs and the directory
+const fs = require('fs');
+const path = require('path');
+
+// Define the Logs directory
+const logsDir = path.join(__dirname, 'Logs');
+
+// Check if the Logs directory exists
+console.log(`Checking if Logs directory exists at: ${logsDir}`);
+
+if (fs.existsSync(logsDir)) {
+    console.log('Logs directory found. Proceeding to delete files...');
+    fs.readdirSync(logsDir).forEach(file => {
+        console.log(`Deleting file...${file}`);
+        fs.unlinkSync(path.join(logsDir, file));  // Remove each file
+    });
+    
+    // Remove the Logs directory
+    fs.rmdirSync(logsDir);
+    console.log('Logs directory deleted.');
+} else {
+    console.log('Logs directory does not exist.');
+}
+
+// Check if the Logs directory exists, if not, create it
+if (!fs.existsSync(logsDir)) {
+    fs.mkdirSync(logsDir);
+    console.log('Logs directory created.');
+} else {
+    console.log('Logs directory already exists.');
+}
+
+// Change the current working directory to the Logs directory
+process.chdir(logsDir);
+
+// Create 10 log files and write some text in them
+for (let i = 0; i < 10; i++) {
+    const fileName = `log${i}.txt`;
+    fs.writeFileSync(fileName, `This is log file ${i}`);
+    console.log(fileName);
+}
+
